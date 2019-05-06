@@ -2,8 +2,6 @@ import socket
 import os
 import sys
 
-
-
 rsaLocation = os.path.abspath(os.path.join(os.getcwd(), os.pardir))                                 # Get the current directory and find its parent directory, its where RSAkeys.py is located
 sys.path.insert(0, rsaLocation)                                                                     # Add that path to sys so it can be imported
 
@@ -37,11 +35,7 @@ except ValueError:                                                              
 print("Recieved Secret Key from server. Decrypted using client private key ...")
 #print(SECRET_KEY.decode())
 
-
-
-
 # START ADDING SYMMETRIC ENCRYPTION HERE, SECRET KEY SHOULD BE NOW AVAILABLE TO BOTH
-
 option = input("Send or recieve file? (s/r) : ")                                                    # Client specifies whether to send or recieve file
 s.send(option.encode())                                                                             # Sends this information to server 
 
@@ -51,9 +45,8 @@ if (option == 's' or option == 'S' or option == 'send' or option == 'Send'):    
     filedata = file.read(1024)
 
     #Takes file data and encrypts it using the secret key. This cipher data is sent instead of the plain text file data
-    cdata = keyGen.encryptMsg(filedata, SECRET_KEY)  
-                                                                          # Read the opened file
-    s.send(cdata)                                                                                # Send the read file contents to client
+    cdata = keyGen.encryptMsg(filedata, SECRET_KEY)                                                 # Read the opened file
+    s.send(cdata)                                                                                   # Send the read file contents to client
     print("The file has been sent successfully")                                                    # Let client know that file has been sent
 
 elif (option == 'r' or option == 'R' or option == 'recieve' or option == 'Recieve'):                # The client wants is recieving a file
@@ -61,10 +54,9 @@ elif (option == 'r' or option == 'R' or option == 'recieve' or option == 'Reciev
     file_data = s.recv(1024)
 
     #Takes file data and decrypts it using the secret key. This plain data is recieved instead of the cipher text file data
-    pdata = keyGen.decryptMsg(file_data, SECRET_KEY) 
-                                                                            # Recieved 1024 bytes, needs to be updated for larger files
+    pdata = keyGen.decryptMsg(file_data, SECRET_KEY)                                                # Recieved 1024 bytes, needs to be updated for larger files
     file = open(filename,'wb')                                                                      # Open the named filed to be written into
-    file.write(pdata)                                                                           # Write into the opened file the recieved data
+    file.write(pdata)                                                                               # Write into the opened file the recieved data
     file.close()                                                                                    # Close file
     print("File has been received successfully")                                                    # Let client know that file has been received
 
