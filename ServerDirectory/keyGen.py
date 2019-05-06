@@ -4,7 +4,7 @@ def generateKey():
 	key = Fernet.generate_key()
 	#print("Key Generated: ", key)
 
-	file = open('key.key', 'wb')
+	file = open('secretkey.key', 'wb')
 	file.write(key)
 	file.close()
 	return key

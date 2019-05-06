@@ -4,26 +4,34 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives.asymmetric import rsa
 
+import os
 
+current_path = os.path.dirname(os.path.abspath(__file__))								# Get the path of this script
+publicKeyDirectory = os.path.join(current_path,'PublicKeys')							# Join the path of this script with the publickeys folder
 
-
-def loadPrivateKey():
-	with open('private.pem', 'rb') as file:
+def loadPrivateKey(name):
+	privateFileName = name + '_private.pem'
+	with open(privateFileName, 'rb') as file:
 		privateKey = serialization.load_pem_private_key(
 			file.read(),
 			password = None,
 			backend	= default_backend()	
 		)
+		return privateKey
 
-def loadPublicKey():
-	with open('public.pem', 'rb') as file:
+
+def loadPublicKey(name):
+	#Extra os stuff allows the saving of public key into the publicKey directory
+	publicFileName = name + '_public.pem'
+	publicFileName = os.path.join(publicKeyDirectory, publicFileName)
+	with open(publicFileName, 'rb') as file:
 		publicKey = serialization.load_pem_public_key(
 			file.read(),
-			password = None,
 			backend	= default_backend()	
 		)
+		return publicKey
 
-def generateKeys():
+def generateKeys(name):
 	#generates private key
 	privateKey = rsa.generate_private_key(
 		public_exponent=65537,
@@ -41,7 +49,8 @@ def generateKeys():
 	    encryption_algorithm=serialization.NoEncryption()
 	)
 
-	with open('private.pem', 'wb') as f:
+	privateFileName = name + '_private.pem'
+	with open(privateFileName, 'wb') as f:
 	    f.write(pem)
 
 	#save public key to directory
@@ -50,23 +59,27 @@ def generateKeys():
 	    format=serialization.PublicFormat.SubjectPublicKeyInfo
 	)
 
-	with open('public.pem', 'wb') as f:
+	#Extra os stuff allows the saving of public key into the publicKey directory
+	publicFileName = name + '_public.pem'
+	publicFileName = os.path.join(publicKeyDirectory, publicFileName)
+	with open(publicFileName, 'wb') as f:
 	    f.write(pem)
 
+	'''
 	keys = {
 		'public' : publicKey,
 		'private' : privateKey
 	}
 
 	return keys
-
+	'''
 
 def encrypt(ptext, publicKey):
 	ctext = publicKey.encrypt(
 		ptext,
 		padding.OAEP(
-			mgf=padding.MGF1(algorithm=hashes.SHA1()),
-			algorithm=hashes.SHA1(),
+			mgf=padding.MGF1(algorithm=hashes.SHA256()),
+			algorithm=hashes.SHA256(),
 			label=None
 		)
 
@@ -77,8 +90,8 @@ def decrypt(ctext, privateKey):
 	ptext = privateKey.decrypt(
 		ctext,
 		padding.OAEP(
-			mgf=padding.MGF1(algorithm=hashes.SHA1()),
-			algorithm=hashes.SHA1(),
+			mgf=padding.MGF1(algorithm=hashes.SHA256()),
+			algorithm=hashes.SHA256(),
 			label=None
 		)
 	)
