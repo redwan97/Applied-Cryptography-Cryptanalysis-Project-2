@@ -19,7 +19,8 @@ def readKey(filename):
 
 #symmetric encryt message 
 def encryptMsg(msg, key):
-	encoded = msg.encode()
+	encoded = msg
+	#.encode()
 	f = Fernet(key)
 	encrypted = f.encrypt(encoded)
 	return(encrypted)
@@ -28,7 +29,7 @@ def encryptMsg(msg, key):
 def decryptMsg(msg, key): 
 	f = Fernet(key)
 	decrypted = f.decrypt(msg)
-	return(decrypted.decode())
+	return(decrypted)
 
 #symmetric encryt file
 def encryptFile(filename, keyfilename):
