@@ -1,4 +1,7 @@
+from cryptography.fernet import Fernet
 import socket
+import keyGen
+
 
 s = socket.socket()
 host = socket.gethostname()
@@ -8,6 +11,7 @@ s.listen(1)
 print("Waiting for any incoming connections ... ")
 conn, addr = s.accept()
 print(addr, " Has connected to the network")
+keyGen.generateKey()
 
 clientOption = conn.recv(1024).decode()                                                                                 # Server recieves clients option of sending or recieving
 
