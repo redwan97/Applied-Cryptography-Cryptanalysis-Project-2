@@ -7,6 +7,7 @@ def generateKey():
 	file = open('key.key', 'wb')
 	file.write(key)
 	file.close()
+	return key
 
 #Get key
 def readKey(filename):
