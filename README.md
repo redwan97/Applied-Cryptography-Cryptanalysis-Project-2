@@ -1,6 +1,5 @@
 # Secure Python-FTP
-[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)]
-(https://travis-ci.org/joemccann/dillinger)
+![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)
 
 Simple Python FTP server-client architecture that secures connection using asymmetric 
 shared key encryption and cost effective symmetric decryption through the host.   

@@ -22,7 +22,6 @@ server_public_key = rsaKeys.loadPublicKey('server')                             
 
 s.send(b'Ready to do asymmetric encryption to establish shared secret key ...')                     # Let server know that the client is ready to asymmetric handshake
 encrypted_secret_key = s.recv(1024)                                                                 # Recieve the encrypted secret key
-#print(encrypted_secret_key)
 SECRET_KEY = None
 try:
     SECRET_KEY = rsaKeys.decrypt(encrypted_secret_key, client_private_key)                          # Try to decrypt the secret key using clients private key

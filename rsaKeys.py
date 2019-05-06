@@ -96,3 +96,17 @@ def decrypt(ctext, privateKey):
 		)
 	)
 	return ptext
+
+
+def test():
+	generateKeys('test')
+	prKey = loadPrivateKey('test')
+	puKey = loadPublicKey('test')
+
+	x = ("test text").encode()
+	ct = encrypt(x, puKey)
+	pt = decrypt(ct, prKey)
+
+	print("Test: ", pt)
+
+
