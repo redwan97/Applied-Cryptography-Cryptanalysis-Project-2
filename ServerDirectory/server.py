@@ -2,6 +2,8 @@ from cryptography.fernet import Fernet
 import socket
 import keyGen
 
+
+SECRET_KEY = None
 s = socket.socket()
 host = socket.gethostname()
 port = 8000
@@ -11,7 +13,7 @@ print("Waiting for any incoming connections ... ")
 conn, addr = s.accept()
 print(addr, " Has connected to the network")
 
-secret_key = keyGen.generateKey()
+SECRET_KEY = keyGen.generateKey()
 clientOption = conn.recv(1024).decode()                                                                                 # Server recieves clients option of sending or recieving
 
 if (clientOption == 's' or clientOption == 'S' or clientOption == 'send' or clientOption == 'Send'):                    
