@@ -11,9 +11,7 @@ import keyGen
 rsaKeys.generateKeys('server')                                                                                          # Generate public-private key pair for server
 server_private_key = rsaKeys.loadPrivateKey('server')                                                                   # Load server private key
 server_public_key = rsaKeys.loadPublicKey('server')                                                                     # Load server public key
-                                                                     # Load client public key
-
-
+                                                                     
 s = socket.socket()
 host = socket.gethostname()
 port = 8000
@@ -24,7 +22,7 @@ conn, addr = s.accept()
 print(addr, " Has connected to the network")
 print(conn.recv(1024).decode())                                                                                         # Will let you know if client is ready for asymmetric handshake
 SECRET_KEY = keyGen.generateKey()
-client_public_key = rsaKeys.loadPublicKey('client')                                                                                       # Generate a secret key for symmetric encryption
+client_public_key = rsaKeys.loadPublicKey('client')                                                                     # Generate a secret key for symmetric encryption
 encrypted_secret_key = rsaKeys.encrypt(SECRET_KEY, client_public_key)                                                   # Encrypt the secret key using clients public key (asymmetric encryption)
 
 conn.send(encrypted_secret_key)
@@ -33,10 +31,7 @@ print("Sent Secret Key to client encrypted using client public key ...")        
 #print(SECRET_KEY.decode())
 
 
-
-
 # START ADDING SYMMETRIC ENCRYPTION HERE, SECRET KEY SHOULD BE NOW AVAILABLE TO BOTH
-
 clientOption = conn.recv(1024).decode()                                                                                 # Server recieves clients option of sending or recieving
 if (clientOption == 's' or clientOption == 'S' or clientOption == 'send' or clientOption == 'Send'):                    
     print(addr, " is sending a file.")                                                                                  # The client is sending a file

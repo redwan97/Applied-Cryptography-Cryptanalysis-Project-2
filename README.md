@@ -4,6 +4,10 @@
 Simple Python FTP server-client architecture that secures connection using asymmetric 
 shared key encryption and cost effective symmetric decryption through the host.   
 
+# Requirements
+  - Python3
+  - Modules: Cryptography, Sockets 
+
 # Features
   - Send files to FTP server
   - Recieve files from FTP server
