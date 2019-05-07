@@ -8,6 +8,8 @@ sys.path.insert(0, rsaLocation)                                                 
 import rsaKeys
 import keyGen
 
+
+show = True
 s = socket.socket()
 host = socket.gethostname()                                                                         # host = input(str("Please enter host address of the sender: "))                                                
 port = 8000
@@ -19,12 +21,26 @@ client_private_key = rsaKeys.loadPrivateKey('client')                           
 client_public_key = rsaKeys.loadPublicKey('client')                                                 # Load client public key
 server_public_key = rsaKeys.loadPublicKey('server')                                                 # Load server public key
 
-
 s.send(b'Ready to do asymmetric encryption to establish shared secret key ...')                     # Let server know that the client is ready to asymmetric handshake
+
 encrypted_secret_key = s.recv(1024)                                                                 # Recieve the encrypted secret key
+if(show):
+    print(server_public_key)
+    print(client_public_key)
+    print(client_private_key)
+    print("\n")
+    print("The encrypted secret key is: ")
+    print(encrypted_secret_key)
+
+
+
 SECRET_KEY = None
 try:
     SECRET_KEY = rsaKeys.decrypt(encrypted_secret_key, client_private_key)                          # Try to decrypt the secret key using clients private key
+    if(show):
+        print("The decrypted secret key is: ")
+        print(SECRET_KEY)
+        print("\n")
 except ValueError:                                                                                  # If error, then manually extract secret key ... error sometimes occurs ...
     print("Encountered error trying to decrypt. Manually taking secret key ...")
     filename = os.path.join(rsaLocation,'ServerDirectory','secretkey.key')
@@ -47,6 +63,11 @@ if (option == 's' or option == 'S' or option == 'send' or option == 'Send'):    
     cdata = keyGen.encryptMsg(filedata, SECRET_KEY)                                                 # Read the opened file
     s.send(cdata)                                                                                   # Send the read file contents to client
     print("The file has been sent successfully")                                                    # Let client know that file has been sent
+    if(show):
+        print("\n")
+        print("The encrypted file contents: ")
+        print(cdata)
+        print("\n")
 
 elif (option == 'r' or option == 'R' or option == 'recieve' or option == 'Recieve'):                # The client wants is recieving a file
     filename = input(str("Please enter a filename for the incoming file: "))                        # Name the file to be recived  (something.txt), make sure to put .txt

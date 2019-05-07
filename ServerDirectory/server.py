@@ -8,10 +8,12 @@ sys.path.insert(0, rsaLocation)                                                 
 import rsaKeys
 import keyGen
 
+show = True
+
 rsaKeys.generateKeys('server')                                                                                          # Generate public-private key pair for server
 server_private_key = rsaKeys.loadPrivateKey('server')                                                                   # Load server private key
 server_public_key = rsaKeys.loadPublicKey('server')                                                                     # Load server public key
-                                                                     
+
 s = socket.socket()
 host = socket.gethostname()
 port = 8000
@@ -20,14 +22,25 @@ s.listen(1)
 print("Waiting for any incoming connections ... ")
 conn, addr = s.accept()
 print(addr, " Has connected to the network")
+
+if(show):
+    print(server_public_key)
+    print(server_private_key)
+    print("\n")
+
 print(conn.recv(1024).decode())                                                                                         # Will let you know if client is ready for asymmetric handshake
 SECRET_KEY = keyGen.generateKey()
 client_public_key = rsaKeys.loadPublicKey('client')                                                                     # Generate a secret key for symmetric encryption
 encrypted_secret_key = rsaKeys.encrypt(SECRET_KEY, client_public_key)                                                   # Encrypt the secret key using clients public key (asymmetric encryption)
-
-conn.send(encrypted_secret_key)
-#conn.send(encrypted_secret_key)                                                                                        # Send the encrypted secret key
+conn.send(encrypted_secret_key)                                                                                         # Send the encrypted secret key
 print("Sent Secret Key to client encrypted using client public key ...")                                                # Let user know you have done so
+
+if(show):
+    print("The secret key is:")
+    print(SECRET_KEY)
+    print("Encrypted Secret Key: ")
+    print(encrypted_secret_key)
+    print("\n")
 #print(SECRET_KEY.decode())
 
 
@@ -44,6 +57,7 @@ if (clientOption == 's' or clientOption == 'S' or clientOption == 'send' or clie
     file.write(pdata)                                                                                                   # Write into the opened file the recieved data
     file.close()                                                                                                        # Close file
     print("File has been received successfully")                                                                        # Let server know that file has been received
+    
 
 elif (clientOption == 'r' or clientOption == 'R' or clientOption == 'recieve' or clientOption == 'Recieve'):            
     print(addr, " is requesting a file.")                                                                               # The client wants to recieve a file
@@ -55,6 +69,12 @@ elif (clientOption == 'r' or clientOption == 'R' or clientOption == 'recieve' or
     cdata = keyGen.encryptMsg(filedata, SECRET_KEY)                                                                     # Read the opened file 
     conn.send(cdata)                                                                                                    # Send the read file contents to client
     print("The file has been sent successfully")                                                                        # Let server know that file has been sent
+    if(show):
+        print("\n")
+        print("The encrypted file contents: ")
+        print(cdata)
+        print("\n")
+
     
 else:
     print("Invalid option. Terminating program ...")
